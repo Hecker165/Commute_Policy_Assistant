@@ -1,0 +1,15 @@
+{
+  "mode": "live",
+  "llm": "ollama:llama3.2:3b",
+  "retrieval_mode": "semantic",
+  "embedding_provider": "default",
+  "cases_total": 22,
+  "cases_passed": 18,
+  "answer_correctness": 0.818,
+  "retrieval_recall_at3": 1.0,
+  "citation_validity": 1.0,
+  "tenant_leaks": 0,
+  "latency_ms_p50": 905.5,
+  "latency_ms_p95": 1397.9,
+  "output_file": "eval\\results-live-semantic.jsonl"
+}

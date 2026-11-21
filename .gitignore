@@ -1,0 +1,25 @@
+# .gitignore — local runtime state, secrets and downloaded runtimes never get committed
+
+# secrets & runtime state
+.env
+data/runtime/
+data/eval-runtime/
+data/model_cache/
+**/jwt_secret
+
+# downloaded runtimes & caches
+.runtime/
+
+# python
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+
+# OS noise
+.DS_Store
+Thumbs.db
+
+# the assignment prompt stays out of the submission repo
+Case Study B*.docx
+tasks/
