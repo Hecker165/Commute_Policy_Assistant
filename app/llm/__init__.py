@@ -14,10 +14,13 @@ def build_llm(settings: Settings) -> LLMProvider:
     if settings.llm_provider == "ollama":
         return OllamaLLM(base_url=settings.ollama_base_url, model=settings.llm_model)
     if settings.llm_provider == "openai":
+        api_key = (
+            settings.openai_api_key or settings.google_api_key or settings.gemini_api_key
+        )
         return OpenAICompatLLM(
             base_url=settings.openai_base_url,
             model=settings.llm_model,
-            api_key=settings.openai_api_key,
+            api_key=api_key,
         )
     if settings.llm_provider == "extractive":
         return ExtractiveLLM()

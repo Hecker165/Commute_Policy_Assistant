@@ -20,6 +20,13 @@ if [ ! -f .venv/.deps-installed ]; then
     echo ok > .venv/.deps-installed
 fi
 
+# A local .env (e.g. a hosted model such as Google Gemini) overrides the local
+# Ollama setup entirely: the app reads it, the script stays out of the way.
+if [ -f .env ]; then
+    echo "[start] .env found - using its LLM configuration; skipping local Ollama setup."
+    exec "$VPY" -m uvicorn app.main:app --host 0.0.0.0 --port 8000
+fi
+
 # --- ensure the local LLM backend (Ollama, portable, project-local) ---------
 export LLM_MODEL="${LLM_MODEL:-llama3.2:3b}"
 export OLLAMA_HOST="127.0.0.1:11434"

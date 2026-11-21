@@ -55,8 +55,12 @@ class Settings(BaseSettings):
     llm_provider: LLM_PROVIDERS = "ollama"
     llm_model: str = "llama3.2:3b"  # measured: warm answers in 1-2s on 12 CPUs, best small-model reasoning
     ollama_base_url: str = "http://127.0.0.1:11434"
-    openai_base_url: str = "https://api.groq.com/openai/v1"
+    # Hosted OpenAI-compatible endpoint (default: Google Gemini's OpenAI layer;
+    # any other provider works by changing the base URL, e.g. Groq).
+    openai_base_url: str = "https://generativelanguage.googleapis.com/v1beta/openai/"
     openai_api_key: str = ""  # optional adapter only; empty by default, never committed
+    google_api_key: str = ""  # GOOGLE_API_KEY alias (Google AI Studio)
+    gemini_api_key: str = ""  # GEMINI_API_KEY alias
     llm_timeout_s: float = 2.2  # per-call cap, shorter than the request budget
     llm_max_tokens: int = 220
     llm_temperature: float = 0.0

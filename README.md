@@ -24,6 +24,17 @@ The script bootstraps everything inside the project folder (nothing is written t
 
 First-run downloads: model ~2 GB + embedding model ~80 MB (cached under `data/model_cache`). Subsequent starts take seconds. If the LLM backend cannot be prepared, the service still starts in a deterministic `extractive` mode (answers are quote-based; everything else identical).
 
+**Using a hosted model instead** (e.g. Google Gemini's free tier): create a `.env` file in the project root — the start scripts detect it, skip the local Ollama setup, and the app reads it directly:
+
+```text
+LLM_PROVIDER=openai
+OPENAI_BASE_URL=https://generativelanguage.googleapis.com/v1beta/openai/
+GOOGLE_API_KEY=AIza...            # or GEMINI_API_KEY / OPENAI_API_KEY
+LLM_MODEL=gemini-2.0-flash
+```
+
+The key is read only from `.env`/environment (never logged, never committed — `.env` is git-ignored), and any other OpenAI-compatible provider works the same way by changing the base URL. All measured numbers in this README were produced with the local Ollama model; the hosted adapter is the same pipeline behind one configuration switch.
+
 **With Docker instead** (fully containerized; downloads the same model into a named volume):
 
 ```text

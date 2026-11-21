@@ -16,6 +16,11 @@ os.environ.setdefault("RETRIEVAL_MIN_SIMILARITY", "0.10")
 os.environ.setdefault("ANONYMIZED_TELEMETRY", "False")
 os.environ.setdefault("JWT_SECRET", "test-signing-secret")
 
+# Tests must be hermetic: a developer machine may carry hosted-provider keys
+# in its environment; pop them so key-handling tests exercise the empty case.
+for _key in ("OPENAI_API_KEY", "GOOGLE_API_KEY", "GEMINI_API_KEY"):
+    os.environ.pop(_key, None)
+
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT))
 

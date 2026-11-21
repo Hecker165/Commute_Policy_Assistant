@@ -23,6 +23,13 @@ if not exist .venv\.deps-installed (
     echo ok> .venv\.deps-installed
 )
 
+REM A local .env (e.g. a hosted model such as Google Gemini) overrides the
+REM local Ollama setup entirely: the app reads it, the script stays out of the way.
+if exist .env (
+    echo [start] .env found - using its LLM configuration; skipping local Ollama setup.
+    goto :serve
+)
+
 REM --- ensure the local LLM backend (Ollama, portable, project-local) ---------
 set OLLAMA_BIN=.runtime\ollama\ollama.exe
 set OLLAMA_MODELS=%cd%\.runtime\ollama-models

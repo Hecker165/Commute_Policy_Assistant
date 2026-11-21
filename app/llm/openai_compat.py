@@ -1,7 +1,10 @@
-"""Optional OpenAI-compatible provider (e.g. Groq free tier).
+"""Hosted OpenAI-compatible provider (Google Gemini's OpenAI layer, Groq, etc.).
 
-Disabled by default; used only when LLM_PROVIDER=openai and OPENAI_API_KEY
-is present in the environment. Never commit the key.
+Used only when LLM_PROVIDER=openai and an API key is present in the
+environment or .env. The key is read from configuration only — never logged,
+never committed. One provider quirk is handled explicitly: some compatible
+endpoints reject `response_format`; in that case the call is retried once
+without it (the prompt already demands a single JSON object).
 """
 
 from __future__ import annotations
@@ -12,13 +15,23 @@ from .base import LLMError, LLMTimeout
 
 
 class OpenAICompatLLM:
-    def __init__(self, base_url: str, model: str, api_key: str) -> None:
+    def __init__(
+        self,
+        base_url: str,
+        model: str,
+        api_key: str,
+        transport: httpx.BaseTransport | None = None,  # test seam
+    ) -> None:
         if not api_key:
-            raise LLMError("OPENAI_API_KEY is not set")
+            raise LLMError(
+                "no API key configured: set OPENAI_API_KEY (or GOOGLE_API_KEY) "
+                "in the environment or in a local .env file"
+            )
         self._client = httpx.Client(
-            base_url=base_url.rstrip("/"),
+            base_url=base_url.rstrip("/") + "/",
             headers={"Authorization": f"Bearer {api_key}"},
             timeout=httpx.Timeout(5.0, connect=2.0),
+            transport=transport,
         )
         self._model = model
 
@@ -45,6 +58,11 @@ class OpenAICompatLLM:
             payload["response_format"] = {"type": "json_object"}
         try:
             response = self._client.post("/chat/completions", json=payload, timeout=timeout_s)
+            if response.status_code == 400 and force_json and "response_format" in response.text:
+                # Provider does not support response_format; the prompt already
+                # constrains the shape, so retry once without it.
+                payload.pop("response_format", None)
+                response = self._client.post("/chat/completions", json=payload, timeout=timeout_s)
         except httpx.TimeoutException as exc:
             raise LLMTimeout(f"openai-compatible call exceeded {timeout_s}s") from exc
         except httpx.HTTPError as exc:
