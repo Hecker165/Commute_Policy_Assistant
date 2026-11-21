@@ -4,12 +4,12 @@
   "retrieval_mode": "semantic",
   "embedding_provider": "default",
   "cases_total": 23,
-  "cases_passed": 23,
-  "answer_correctness": 1.0,
+  "cases_passed": 22,
+  "answer_correctness": 0.957,
   "retrieval_recall_at3": 1.0,
   "citation_validity": 1.0,
   "tenant_leaks": 0,
-  "latency_ms_p50": 1308.6,
-  "latency_ms_p95": 1879.0,
+  "latency_ms_p50": 1772.1,
+  "latency_ms_p95": 2352.6,
   "output_file": "eval\\results.jsonl"
 }

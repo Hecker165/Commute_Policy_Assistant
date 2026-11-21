@@ -38,6 +38,8 @@ from app.seed import seed_policies  # noqa: E402
 
 @pytest.fixture()
 def settings(tmp_path: Path) -> Settings:
+    # _env_file=None keeps tests hermetic: a developer's local .env (e.g. with a
+    # hosted API key) must never leak into test configuration.
     return Settings(
         data_dir=tmp_path / "data",
         policies_dir=PROJECT_ROOT / "data" / "policies",
@@ -45,6 +47,7 @@ def settings(tmp_path: Path) -> Settings:
         llm_provider="fake",
         request_budget_s=5.0,
         llm_timeout_s=4.0,
+        _env_file=None,  # type: ignore[call-arg]
     )
 
 

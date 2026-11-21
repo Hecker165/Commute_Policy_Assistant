@@ -25,3 +25,6 @@ __pycache__/
 # --- OS noise -----------------------------------------------------------------
 .DS_Store
 Thumbs.db
+
+# --- personal demo helper (not part of the submission) ---
+demo-commands.ps1

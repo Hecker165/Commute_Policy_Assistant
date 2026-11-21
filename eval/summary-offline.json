@@ -9,7 +9,7 @@
   "retrieval_recall_at3": 1.0,
   "citation_validity": 1.0,
   "tenant_leaks": 0,
-  "latency_ms_p50": 217.1,
-  "latency_ms_p95": 332.5,
+  "latency_ms_p50": 283.8,
+  "latency_ms_p95": 325.9,
   "output_file": "eval\\results-offline.jsonl"
 }

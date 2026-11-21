@@ -130,7 +130,7 @@ FastAPI receives a JWT whose verified claims carry `company_id` + `role`. The qu
 
 6. **Local, free, and constrained.** Ollama + `llama3.2:3b` with `format: "json"` (grammar-constrained decoding — the model cannot emit invalid JSON). A tolerant parser also accepts the three-line format and raw JSON for other providers. A deterministic **extractive fallback** (`LLM_PROVIDER=extractive`) answers by picking the best-matching policy sentence — used by CI, tests, and as a no-model safety mode; it also screens injection-looking sentences. *Trade-off:* the fallback is visibly weaker (verbatim quotes, no synthesis) but never fabricates.
 
-7. **Benchmarks are honest.** Warm-up requests are excluded from p95; failures are counted and reported; nothing is hard-coded. Measured warm p95 **1.39 s** (semantic) / **1.41 s** (hybrid) on a 12-core CPU — inside the 3 s budget with ~1.6 s of headroom. A request-level deadline (2.7 s) plus per-call LLM timeout (2.2 s) guarantee the "try again" response instead of a hang; the only allowed retry is one repair call within the remaining budget.
+7. **Benchmarks are honest.** Warm-up requests are excluded from p95; failures are counted and reported; nothing is hard-coded. Measured warm p95 **1.77 s** (semantic) / **1.35 s** (hybrid) on a 12-core CPU — inside the 3 s budget with ~1.2 s of headroom. A request-level deadline (2.7 s) plus per-call LLM timeout (2.2 s) guarantee the "try again" response instead of a hang; the only allowed retry is one repair call within the remaining budget.
 
 8. **Two embedding modes.** Live: Chroma's bundled ONNX MiniLM-L6-v2 (downloaded once). Tests/CI: a deterministic hashed bag-of-n-grams embedding (no download, no network, stable similarity). *Trade-off:* offline retrieval is lexical rather than semantic, so offline scores approximate but never overstate live behavior.
 
@@ -138,7 +138,7 @@ FastAPI receives a JWT whose verified claims carry `company_id` + `role`. The qu
 
 | Constraint | How it is met |
 |---|---|
-| p95 ≤ 3 s with the LLM call included | request deadline 2.7 s enforced with `asyncio.wait_for` around a bounded pipeline; LLM call capped at 2.2 s; measured warm p95 **1.39 s** (`docs/benchmark-semantic.json`) |
+| p95 ≤ 3 s with the LLM call included | request deadline 2.7 s enforced with `asyncio.wait_for` around a bounded pipeline; LLM call capped at 2.2 s; measured warm p95 **1.77 s** (`docs/benchmark-semantic.json`) |
 | ≤ 2 LLM calls per question | 1 normal call + at most 1 repair, only if the budget affords it (`MAX_LLM_CALLS_PER_REQUEST` is a constant, not a setting); no-evidence questions make 0 calls |
 | ≤ 3 cited chunks | retrieval fetches 4 candidates, at most 3 reach the prompt, citations are a subset of those 3, rendered from trusted metadata |
 
@@ -159,12 +159,12 @@ Scoring is deterministic plain code (no LLM judge): covered/not-covered flag, re
 
 | Run | Mode | Retrieval | Cases | Recall@3 | Citation validity | Leaks | p50 | p95 |
 |---|---|---|---|---|---|---|---|---|
-| **submitted** | live (`llama3.2:3b`) | semantic | **23/23** | 1.00 | 1.00 | **0** | 1.31 s | 1.88 s |
-| comparison | live | **hybrid (bonus)** | 21/23 | 1.00 | 1.00 | 0 | 1.21 s | 1.80 s |
+| **submitted** | live (`llama3.2:3b`) | semantic | **22/23** | 1.00 | 1.00 | **0** | 1.37 s | 2.35 s |
+| comparison | live | **hybrid (bonus)** | 19/23 | 1.00 | 1.00 | 0 | — | 1.76 s |
 | CI mode | offline (extractive) | semantic | 23/23 | 1.00 | 1.00 | 0 | 0.26 s | 0.33 s |
 | CI mode | offline | hybrid | 22/23 | 1.00 | 1.00 | 0 | — | 0.45 s |
 
-Warm benchmark (21 timed requests after 5 warm-ups, real LLM call included, zero failures): semantic **p50 1008 ms / p95 1386 ms**, hybrid p50 943 ms / p95 1407 ms. Machine: Windows 10.0.26300, 12 CPUs (Intel Coffee Lake), Python 3.11.9, Ollama, `llama3.2:3b`. Full JSON: `docs/benchmark-*.json`. Three consecutive live runs produced byte-identical pass/answer sets (temperature 0 + deterministic retrieval).
+Warm benchmark (21 timed requests after 5 warm-ups, real LLM call included, zero failures): semantic **p50 1261 ms / p95 1768 ms**, hybrid p50 1087 ms / p95 1346 ms. Machine: Windows 10.0.26300, 12 CPUs (Intel Coffee Lake), Python 3.11.9, Ollama, `llama3.2:3b`. Full JSON: `docs/benchmark-*.json`. Repeated live runs produce identical pass/answer sets (temperature 0 + deterministic retrieval) except for one documented borderline case.
 
 Details, method, failure analysis and limitations: [docs/evaluation-report.md](docs/evaluation-report.md).
 
@@ -181,7 +181,7 @@ app/            FastAPI app, auth, catalog (SQLite), policies (parse/chunk/inges
                 vectordb (Chroma), retrieval, answering, llm providers, seed, cli, eval, benchmark
 data/policies/  the three fictional policies (+ updates/acme-2026.2.md used in demos/tests)
 eval/           cases.jsonl (gold, immutable) + committed results/summaries
-tests/          65 offline tests (auth, ingestion atomicity, isolation, grounding, budgets, API, eval)
+tests/          70 offline tests (auth, ingestion atomicity, isolation, grounding, budgets, API, eval)
 docs/           evaluation report, benchmark JSONs
 start.bat / start.sh / Dockerfile / compose.yaml
 ```

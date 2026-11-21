@@ -4,12 +4,12 @@
   "retrieval_mode": "hybrid",
   "embedding_provider": "default",
   "cases_total": 23,
-  "cases_passed": 21,
-  "answer_correctness": 0.913,
+  "cases_passed": 19,
+  "answer_correctness": 0.826,
   "retrieval_recall_at3": 1.0,
   "citation_validity": 1.0,
   "tenant_leaks": 0,
-  "latency_ms_p50": 1210.1,
-  "latency_ms_p95": 1798.7,
+  "latency_ms_p50": 1203.1,
+  "latency_ms_p95": 1761.4,
   "output_file": "eval\\results-live-hybrid.jsonl"
 }

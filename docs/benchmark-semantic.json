@@ -1,0 +1,21 @@
+{
+  "timestamp": "2026-11-21T01:02:18+00:00",
+  "provider": "ollama:llama3.2:3b",
+  "retrieval_mode": "semantic",
+  "model_file": "llama3.2:3b",
+  "machine": {
+    "platform": "Windows-10-10.0.26300-SP0",
+    "python": "3.11.9",
+    "cpu_count": 12,
+    "processor": "Intel64 Family 6 Model 158 Stepping 10, GenuineIntel"
+  },
+  "warmup_requests": 5,
+  "timed_requests": 21,
+  "failures": 0,
+  "p50_ms": 1261.4,
+  "p95_ms": 1768.3,
+  "min_ms": 601.2,
+  "max_ms": 1794.6,
+  "target_p95_ms": 3000,
+  "meets_target": true
+}

@@ -11,7 +11,10 @@ from conftest import auth_headers, make_token
 ESCORT_JSON = json.dumps(
     {
         "answerable": True,
-        "answer": "A security escort is mandatory for women employees on drops after 8:00 PM.",
+        "answer": (
+            "The policy states: 'For women employees, a security escort is mandatory "
+            "on any drop that begins after 8:00 PM.' So yes, an escort applies to a 9:30 PM drop."
+        ),
         "evidence_ids": ["c1"],
     }
 )
@@ -66,7 +69,10 @@ def test_other_company_token_answers_from_its_own_policy(client, settings):
         json.dumps(
             {
                 "answerable": True,
-                "answer": "An escort is mandatory on drops after 10:00 PM.",
+                "answer": (
+                    "The policy states: 'A security escort is mandatory for women employees "
+                    "on any drop that begins after 10:00 PM.' So yes, an escort applies."
+                ),
                 "evidence_ids": ["c1"],
             }
         )
@@ -183,7 +189,10 @@ def test_admin_ingestion_activates_new_version(client, settings):
         json.dumps(
             {
                 "answerable": True,
-                "answer": "A security escort is mandatory for drops after 7:30 PM.",
+                "answer": (
+                    "The policy states: 'For women employees, a security escort is mandatory "
+                    "on any drop that begins after 7:30 PM.' So yes, an escort applies to a 9:30 PM drop."
+                ),
                 "evidence_ids": ["c1"],
             }
         )

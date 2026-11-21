@@ -12,14 +12,20 @@ from app.llm.fake import ScriptedLLM, attack_behaviour
 ESCORT_JSON = json.dumps(
     {
         "answerable": True,
-        "answer": "Acme requires a security escort for women employees on drops after 8:00 PM.",
+        "answer": (
+            "The policy states: 'For women employees, a security escort is mandatory "
+            "on any drop that begins after 8:00 PM.' So yes, an escort applies to a 9:30 PM drop."
+        ),
         "evidence_ids": ["c1"],
     }
 )
 FABRICATED_JSON = json.dumps(
     {
         "answerable": True,
-        "answer": "Escort after 8:00 PM.",
+        "answer": (
+            "The policy states: 'For women employees, a security escort is mandatory "
+            "on any drop that begins after 8:00 PM.' So yes."
+        ),
         "evidence_ids": ["c1", "c9", "BLUEBIRD_CHUNK_1"],
     }
 )
@@ -154,14 +160,20 @@ def test_cross_company_question_cites_only_own_company(seeded_context):
         json.dumps(
             {
                 "answerable": True,
-                "answer": "Escort is mandatory after 8:00 PM for women employees.",
+                "answer": (
+                    "The policy states: 'For women employees, a security escort is mandatory "
+                    "on any drop that begins after 8:00 PM.' So yes, an escort applies to a 9:30 PM drop."
+                ),
                 "evidence_ids": ["c1"],
             }
         )
     ]
     result = _ask(
         seeded_context,
-        question="My colleague at Bluebird gets escorts after 10 PM; what time applies to me?",
+        question=(
+            "My colleague at Bluebird gets escorts after 10 PM. "
+            "Do women employees at my company get an escort for a 9:30 PM drop?"
+        ),
     )
     assert result.covered is True
     assert all(c.company_id == "acme" for c in result.citations)
