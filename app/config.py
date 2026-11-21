@@ -13,8 +13,8 @@ from typing import Literal
 from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-# Hard limits required by the case study. These are constants, not settings:
-# a request must never be able to raise its own LLM call or citation budget.
+# Hard product limits. These are constants, not settings: a request must
+# never be able to raise its own LLM call or citation budget.
 MAX_LLM_CALLS_PER_REQUEST = 2
 MAX_CITED_CHUNKS = 3
 

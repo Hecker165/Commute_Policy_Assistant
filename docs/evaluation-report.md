@@ -4,7 +4,7 @@
 
 A fixed gold set of **23 cases** (`eval/cases.jsonl`, immutable) against a fully local stack: Chroma (ONNX MiniLM-L6-v2 embeddings) + SQLite catalog + Ollama running `llama3.2:3b` at temperature 0. Every run re-seeds an isolated store (`data/eval-runtime`) idempotently, so results never depend on the API server's live state, and the version-update case mutates only the eval copy.
 
-Case types (covering the brief's requirements):
+Case types and coverage:
 
 | Type | Cases |
 |---|---|
@@ -79,6 +79,6 @@ These are the real failures we hit while tuning, kept here because they show whe
 - **Container path**: `docker compose config` validated; the compose stack was not executed on the author's machine (no Docker disk quota available), so all measured numbers come from the equivalent local path. The container runs the same code with the same defaults.
 - **Scope**: .md/.txt policy uploads only (per the case constraints); three seeded companies are known to the hallucination guard; multi-user concurrency beyond ingestion-vs-read is untested.
 
-## The trade-off we would defend in a viva
+## The central trade-off
 
 **We spend latency and complexity on server-side citation grounding instead of trusting the model.** The cheaper design — render whatever citations the model claims — would pass most demos but breaks exactly the guarantees this product needs (an employee checks the cited section; a desk executive quotes the wrong company). Our design verifies claimed ids against retrieved evidence, recovers citations by verbatim match against trusted chunk text, and fails safely otherwise. The measurable cost: ~1 extra LLM call only in the rare malformed-output case, and a handful of safe refusals; the measurable benefit: citation validity 1.00 with zero tenant leaks across every run, provable by tests, not by prompt hope.

@@ -39,7 +39,7 @@ def error_response(
     return JSONResponse(status_code=status_code, content=body)
 
 
-# Fixed user-facing messages (the "plain message" required by the brief).
+# Fixed user-facing messages: one wording everywhere, no model-authored error text.
 MSG_NOT_COVERED = (
     "Your company's current transport policy does not cover this, so I can't "
     "answer it from the policy. Please contact the transport desk for help."

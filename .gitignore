@@ -1,25 +1,27 @@
-# .gitignore — local runtime state, secrets and downloaded runtimes never get committed
+# --- NOT part of the submission: local scaffolding, prompts, helper notes ---
+# the assignment/problem statement
+Case Study B*.docx
+*.docx
+# internal working notes and checklists
+tasks/
+docs/recording-script.md
 
-# secrets & runtime state
+# --- secrets & runtime state (never commit) --------------------------------
 .env
 data/runtime/
 data/eval-runtime/
 data/model_cache/
 **/jwt_secret
 
-# downloaded runtimes & caches
+# --- downloaded runtimes & caches -------------------------------------------
 .runtime/
 
-# python
+# --- python ------------------------------------------------------------------
 __pycache__/
 *.pyc
 .pytest_cache/
 .venv/
 
-# OS noise
+# --- OS noise -----------------------------------------------------------------
 .DS_Store
 Thumbs.db
-
-# the assignment prompt stays out of the submission repo
-Case Study B*.docx
-tasks/

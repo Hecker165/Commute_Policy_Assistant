@@ -1,6 +1,6 @@
 # Commute Policy Assistant
 
-An AI assistant that answers employee questions **only from the employee's own company's current transport policy** — with checkable citations, an explicit "not covered" reply when the policy is silent, hard tenant isolation, and graceful failure under time pressure. Built for the MoveInSync campus case study (B).
+An AI assistant for the MoveInSync employee-transport platform that answers employee questions **only from the employee's own company's current transport policy** — with checkable citations, an explicit "not covered" reply when the policy is silent, hard tenant isolation, and graceful failure under time pressure.
 
 All data is fictional and local: three made-up companies (`acme`, `bluebird`, `copper`) with deliberately contradictory rules, a mock policy store, and a local LLM. No paid APIs, no keys in the repo.
 
@@ -171,7 +171,7 @@ app/            FastAPI app, auth, catalog (SQLite), policies (parse/chunk/inges
 data/policies/  the three fictional policies (+ updates/acme-2026.2.md used in demos/tests)
 eval/           cases.jsonl (gold, immutable) + committed results/summaries
 tests/          65 offline tests (auth, ingestion atomicity, isolation, grounding, budgets, API, eval)
-docs/           evaluation report, benchmark JSONs, recording script
+docs/           evaluation report, benchmark JSONs
 start.bat / start.sh / Dockerfile / compose.yaml
 ```
 
